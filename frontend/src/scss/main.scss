@@ -1,0 +1,10 @@
+@use 'variables' as *;
+@use 'components';
+
+body {
+    min-width: 320px;
+}
+
+a {
+    --bs-link-color: #{$oe-accent};
+}
