@@ -1,7 +1,7 @@
 from typing import Any, Literal
 
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session
 
 from backend.common.randomness import create_random_generator
@@ -37,6 +37,12 @@ class GARunRequest(BaseModel):
     elite_value: float = Field(default=2, ge=0, le=1999)
     grain_probability: float = Field(default=0.5, ge=0, le=1)
     seed: int | None = Field(default=None, ge=0, lt=2**63)
+
+    @model_validator(mode="after")
+    def validate_configuration(self) -> "GARunRequest":
+        config = GAConfig(**self.model_dump(exclude={"seed", "repetitions"}))
+        config.validate()
+        return self
 
 
 class GAExperimentRequest(GARunRequest):

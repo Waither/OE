@@ -103,7 +103,9 @@ class GAConfig:
             raise ValueError("Populacja musi miec parzysty rozmiar co najmniej 2.")
         if self.epochs < 1:
             raise ValueError("Liczba epok musi byc dodatnia.")
-        if self.tournament_size < 2 or self.tournament_size > self.population_size:
+        if self.selection == "tournament" and (
+            self.tournament_size < 2 or self.tournament_size > self.population_size
+        ):
             raise ValueError("Rozmiar turnieju musi byc od 2 do rozmiaru populacji.")
         for name, value in (
             ("prawdopodobienstwo krzyzowania", self.crossover_probability),
@@ -236,7 +238,7 @@ def select(population: list[Individual], config: GAConfig, rng: random.Random) -
 def crossover(first: list[int], second: list[int], config: GAConfig, rng: random.Random) -> tuple[list[int], list[int]]:
     if len(first) != len(second):
         raise ValueError("Chromosomy musza miec taka sama dlugosc.")
-    if rng.random() > config.crossover_probability or len(first) < 2:
+    if rng.random() >= config.crossover_probability or len(first) < 2:
         return first.copy(), second.copy()
     if config.crossover == "one_point":
         point = rng.randrange(1, len(first))
@@ -261,7 +263,7 @@ def crossover(first: list[int], second: list[int], config: GAConfig, rng: random
 
 def mutate(genes: list[int], config: GAConfig, rng: random.Random) -> list[int]:
     result = genes.copy()
-    if not result or rng.random() > config.mutation_probability:
+    if not result or rng.random() >= config.mutation_probability:
         return result
     if config.mutation == "boundary":
         result[0] ^= 1
@@ -277,7 +279,7 @@ def mutate(genes: list[int], config: GAConfig, rng: random.Random) -> list[int]:
 
 
 def invert(genes: list[int], probability: float, rng: random.Random) -> list[int]:
-    if len(genes) < 2 or rng.random() > probability:
+    if len(genes) < 2 or rng.random() >= probability:
         return genes.copy()
     left, right = sorted(rng.sample(range(len(genes)), 2))
     return genes[:left] + list(reversed(genes[left:right + 1])) + genes[right + 1:]

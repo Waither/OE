@@ -26,6 +26,15 @@ export async function postBlob(path, blob) {
     return response.json();
 }
 
+export async function deleteJson(path) {
+    const response = await ensureSuccess(await fetch(`${API_BASE_URL}${path}`, {
+        method: 'DELETE',
+        headers: { Accept: 'application/json' },
+    }));
+
+    return response.json();
+}
+
 export async function downloadFile(path) {
     const response = await ensureSuccess(await fetch(`${API_BASE_URL}${path}`));
     const blob = await response.blob();

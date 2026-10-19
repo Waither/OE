@@ -26,6 +26,16 @@ class ChartArtifactRead(BaseModel):
     created_at: datetime
 
 
+class ChartComparisonRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    project_key: str
+    run_ids: list[str]
+    metric: str
+    created_at: datetime
+
+
 class RunListQuery(BaseModel):
     project_key: str | None = Field(default=None, pattern=r"^p[1-4]$")
     limit: int = Field(default=50, ge=1, le=200)

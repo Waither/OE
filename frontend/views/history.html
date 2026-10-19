@@ -1,0 +1,90 @@
+<section aria-labelledby="history-heading">
+    <div class="mb-4">
+        <h1 id="history-heading">Historia uruchomień</h1>
+        <p class="text-muted">Historia i porównania są dopasowane do wybranego projektu.</p>
+    </div>
+
+    <div class="row g-3 align-items-end mb-4">
+        <div class="col-sm-5 col-md-3">
+            <label class="form-label" for="history-project">Projekt</label>
+            <select class="form-select" id="history-project">
+                <option value="p1">Projekt 1</option>
+                <option value="p2">Projekt 2</option>
+                <option value="p3">Projekt 3</option>
+                <option value="p4">Projekt 4</option>
+            </select>
+        </div>
+        <div class="col-sm-5 col-md-3">
+            <label class="form-label" for="history-metric">Wartość na wykresie</label>
+            <select class="form-select" id="history-metric">
+                <option value="best">Najlepsza wartość epoki</option>
+                <option value="worst">Najgorsza wartość epoki</option>
+                <option value="mean">Średnia populacji</option>
+                <option value="standard_deviation">Odchylenie standardowe</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-outline-secondary w-100" id="history-refresh" type="button">Odśwież</button>
+        </div>
+        <div class="col-sm-4 col-md-3">
+            <button class="btn btn-outline-danger w-100" id="history-clear-project" type="button">Wyczyść historię projektu</button>
+        </div>
+    </div>
+
+    <section class="card mb-4" id="history-chart-section" aria-labelledby="history-chart-heading">
+        <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <h2 class="h5 mb-0" id="history-chart-heading">Porównanie przebiegu</h2>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="badge text-bg-primary" id="history-selected-count">0 wybranych</span>
+                <button class="btn btn-sm btn-outline-primary" id="history-download-chart" type="button" disabled>Pobierz PNG</button>
+                <button class="btn btn-sm btn-primary" id="history-save-comparison" type="button" disabled>Zapisz porównanie</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Każda linia przedstawia jedno uruchomienie. Seed identyfikuje linię na wykresie.</p>
+            <div class="position-relative" style="min-height: 380px">
+                <canvas id="history-chart" aria-label="Porównanie wartości pomiędzy epokami" role="img"></canvas>
+            </div>
+            <p class="text-muted mt-3 mb-0" id="history-chart-empty">Zaznacz uruchomienia poniżej, aby zobaczyć porównanie.</p>
+        </div>
+    </section>
+
+    <section class="mb-4" id="history-comparisons-section" aria-labelledby="history-saved-heading">
+        <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+            <h2 class="h5 mb-0" id="history-saved-heading">Zapisane porównania</h2>
+            <button class="btn btn-sm btn-outline-secondary" id="history-refresh-comparisons" type="button">Odśwież listę</button>
+        </div>
+        <p id="history-comparisons-status" class="text-muted" role="status"></p>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Data zapisu</th>
+                        <th scope="col">Metryka</th>
+                        <th scope="col">Uruchomienia</th>
+                        <th scope="col">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody id="history-comparisons"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+        <h2 class="h5 mb-0">Uruchomienia</h2>
+        <div class="d-flex gap-2" id="history-selection-actions">
+            <button class="btn btn-sm btn-outline-primary" id="history-select-all" type="button">Zaznacz widoczne</button>
+            <button class="btn btn-sm btn-outline-secondary" id="history-clear" type="button">Wyczyść wybór</button>
+        </div>
+    </div>
+    <p id="history-status" class="text-muted" role="status"></p>
+    <div class="table-responsive mb-4">
+        <table class="table table-sm table-hover align-middle">
+            <thead>
+                <tr id="history-runs-heading-row"></tr>
+            </thead>
+            <tbody id="history-runs"></tbody>
+        </table>
+    </div>
+
+</section>

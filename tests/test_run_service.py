@@ -13,9 +13,13 @@ from sqlalchemy.pool import StaticPool
 from backend.common.csv_export import create_run_csv_response
 from backend.common.run_service import (
     create_run,
+    delete_project_runs,
     get_chart_artifacts,
+    get_chart_comparison_file,
     get_chart_file,
     get_run,
+    list_chart_comparisons,
+    save_chart_comparison,
     save_chart_png,
 )
 from backend.models import Base
@@ -99,6 +103,144 @@ class RunServiceTests(unittest.TestCase):
                 run=run,
                 name="Niepoprawny",
                 content=b"not an image",
+                artifact_root=self.artifact_root,
+            )
+
+    def test_delete_project_runs_removes_project_data_and_chart_files_only(self) -> None:
+        p1_run = create_run(
+            self.session,
+            project_key="p1",
+            seed=1,
+            algorithm_version="test",
+            parameters={},
+            result_data={},
+        )
+        p2_run = create_run(
+            self.session,
+            project_key="p2",
+            seed=2,
+            algorithm_version="test",
+            parameters={},
+            result_data={},
+        )
+        png_data = b"\x89PNG\r\n\x1a\nchart data"
+        p1_chart = save_chart_png(
+            self.session,
+            run=p1_run,
+            name="P1",
+            content=png_data,
+            artifact_root=self.artifact_root,
+        )
+        p2_chart = save_chart_png(
+            self.session,
+            run=p2_run,
+            name="P2",
+            content=png_data,
+            artifact_root=self.artifact_root,
+        )
+        p1_chart_path = get_chart_file(p1_chart, self.artifact_root)
+        p2_chart_path = get_chart_file(p2_chart, self.artifact_root)
+        p1_comparison = save_chart_comparison(
+            self.session,
+            project_key="p1",
+            run_ids=[p1_run.id, create_run(
+                self.session,
+                project_key="p1",
+                seed=3,
+                algorithm_version="test",
+                parameters={},
+                result_data={},
+            ).id],
+            metric="best",
+            content=png_data,
+            artifact_root=self.artifact_root,
+        )
+        p1_comparison_path = get_chart_comparison_file(p1_comparison, self.artifact_root)
+
+        deleted_count = delete_project_runs(
+            self.session,
+            project_key="p1",
+            artifact_root=self.artifact_root,
+        )
+
+        self.assertEqual(deleted_count, 2)
+        with self.assertRaises(HTTPException):
+            get_run(self.session, p1_run.id)
+        self.assertEqual(get_run(self.session, p2_run.id).id, p2_run.id)
+        self.assertFalse(p1_chart_path.exists())
+        self.assertTrue(p2_chart_path.exists())
+        self.assertEqual(len(get_chart_artifacts(self.session, p2_run.id)), 1)
+        self.assertFalse(p1_comparison_path.exists())
+        self.assertEqual(list_chart_comparisons(self.session, project_key="p1"), [])
+        self.assertEqual(len(list_chart_comparisons(self.session, project_key="p2")), 0)
+
+    def test_chart_comparison_stores_run_ids_metric_and_png(self) -> None:
+        first_run = create_run(
+            self.session,
+            project_key="p1",
+            seed=1,
+            algorithm_version="test",
+            parameters={},
+            result_data={},
+        )
+        second_run = create_run(
+            self.session,
+            project_key="p1",
+            seed=2,
+            algorithm_version="test",
+            parameters={},
+            result_data={},
+        )
+        png_data = b"\x89PNG\r\n\x1a\ncomparison"
+
+        comparison = save_chart_comparison(
+            self.session,
+            project_key="p1",
+            run_ids=[first_run.id, second_run.id],
+            metric="mean",
+            content=png_data,
+            artifact_root=self.artifact_root,
+        )
+        stored = list_chart_comparisons(self.session, project_key="p1")
+
+        self.assertEqual(len(stored), 1)
+        self.assertEqual(stored[0].run_ids, [first_run.id, second_run.id])
+        self.assertEqual(stored[0].metric, "mean")
+        self.assertEqual(get_chart_comparison_file(comparison, self.artifact_root).read_bytes(), png_data)
+
+    def test_chart_comparison_rejects_runs_from_another_project(self) -> None:
+        p1_run = create_run(
+            self.session,
+            project_key="p1",
+            seed=1,
+            algorithm_version="test",
+            parameters={},
+            result_data={},
+        )
+        p2_run = create_run(
+            self.session,
+            project_key="p2",
+            seed=2,
+            algorithm_version="test",
+            parameters={},
+            result_data={},
+        )
+
+        with self.assertRaises(HTTPException):
+            save_chart_comparison(
+                self.session,
+                project_key="p1",
+                run_ids=[p1_run.id, p2_run.id],
+                metric="best",
+                content=b"\x89PNG\r\n\x1a\ncomparison",
+                artifact_root=self.artifact_root,
+            )
+
+    def test_delete_project_runs_rejects_unknown_project(self) -> None:
+        with self.assertRaises(HTTPException):
+            delete_project_runs(
+                self.session,
+                project_key="unknown",
                 artifact_root=self.artifact_root,
             )
 

@@ -3,6 +3,7 @@ import p1View from '../../views/P1.html?raw';
 import p2View from '../../views/P2.html?raw';
 import p3View from '../../views/P3.html?raw';
 import p4View from '../../views/P4.html?raw';
+import historyView from '../../views/history.html?raw';
 
 const routes = {
     '/': {
@@ -28,6 +29,11 @@ const routes = {
         title: 'Projekt 4',
         content: p4View,
         load: () => import('./projects/p4.js'),
+    },
+    '/history': {
+        title: 'Historia uruchomień',
+        content: historyView,
+        load: () => import('./common/history.js'),
     },
 };
 

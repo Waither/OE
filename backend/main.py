@@ -28,7 +28,7 @@ app.include_router(p3_router, prefix="/api/p3", tags=["P3"])
 app.include_router(p4_router, prefix="/api/p4", tags=["P4"])
 
 FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
-PROJECT_ROUTES = frozenset({"1", "2", "3", "4"})
+PROJECT_ROUTES = frozenset({"1", "2", "3", "4", "history"})
 
 
 @app.get("/api/health", tags=["system"])

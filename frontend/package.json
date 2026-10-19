@@ -9,7 +9,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "test": "node --check src/js/projects/p1.js && node --check src/js/router.js",
+        "test": "node --check src/js/projects/p1.js && node --check src/js/common/history.js && node --check src/js/common/chart-export.js && node --check src/js/api.js && node --check src/js/router.js",
         "preview": "vite preview"
     },
     "dependencies": {

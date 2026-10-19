@@ -17,3 +17,14 @@ export async function saveChartPng(chart, runId, name) {
     const query = new URLSearchParams({ name });
     return postBlob(`/runs/${encodeURIComponent(runId)}/charts?${query}`, png);
 }
+
+export async function downloadChartPng(chart, filename) {
+    const png = await chartToPng(chart);
+    const objectUrl = URL.createObjectURL(png);
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = filename;
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+}
