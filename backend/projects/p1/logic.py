@@ -20,6 +20,7 @@ Objective = Literal["minimize", "maximize"]
 SelectionName = Literal["best", "worst", "roulette", "tournament"]
 CrossoverName = Literal["one_point", "two_point", "uniform", "grain"]
 MutationName = Literal["boundary", "one_point", "two_point"]
+EliteMode = Literal["count", "percentage"]
 
 
 @dataclass(frozen=True)
@@ -83,6 +84,8 @@ class GAConfig:
     mutation: MutationName = "one_point"
     mutation_probability: float = 0.02
     inversion_probability: float = 0.05
+    elite_mode: EliteMode = "count"
+    elite_value: float = 2
     elite_count: int = 2
     grain_probability: float = 0.5
 
@@ -110,8 +113,17 @@ class GAConfig:
         ):
             if not 0.0 <= value <= 1.0:
                 raise ValueError(f"{name.capitalize()} musi byc w zakresie 0-1.")
-        if not 0 <= self.elite_count < self.population_size:
-            raise ValueError("Liczba elit musi byc od 0 do rozmiaru populacji - 1.")
+        if self.elite_mode == "count":
+            if not 0 <= self.elite_value < self.population_size:
+                raise ValueError("Liczba elit musi byc od 0 do rozmiaru populacji - 1.")
+        elif not 0 <= self.elite_value < 100:
+            raise ValueError("Procent elit musi byc w zakresie 0-100.")
+
+    @property
+    def effective_elite_count(self) -> int:
+        if self.elite_mode == "percentage":
+            return min(self.population_size - 1, round(self.population_size * self.elite_value / 100))
+        return min(self.population_size - 1, max(0, round(self.elite_value)))
 
 
 @dataclass
@@ -302,7 +314,10 @@ class GeneticAlgorithm:
         for epoch in range(self.config.epochs):
             history.append(self._stats(epoch, population))
             ordered = _rank(population, self.config.objective)
-            next_population = [item.clone() for item in ordered[:self.config.elite_count]]
+            next_population = [
+                item.clone()
+                for item in ordered[:self.config.effective_elite_count]
+            ]
             while len(next_population) < self.config.population_size:
                 first = select(population, self.config, self.rng)
                 second = select(population, self.config, self.rng)

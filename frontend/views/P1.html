@@ -1,1 +1,29 @@
-<h1>Projekt 1</h1>
+<section class="p1-page">
+    <div class="mb-4">
+        <h1>Projekt 1 — klasyczny algorytm genetyczny</h1>
+        <p class="text-muted">Konfiguracja, uruchomienie, wykresy i eksperymenty powtórzeniowe.</p>
+    </div>
+
+    <form id="p1-form" class="row g-3">
+        <div class="col-md-4"><label class="form-label" for="p1-function">Funkcja</label><select class="form-select" id="p1-function"></select></div>
+        <div class="col-md-2"><label class="form-label" for="p1-dimensions">Zmienne</label><select class="form-select" id="p1-dimensions"></select></div>
+        <div class="col-md-2"><label class="form-label" for="p1-objective">Cel</label><select class="form-select" id="p1-objective"><option value="minimize">Minimalizacja</option><option value="maximize">Maksymalizacja</option></select></div>
+        <div class="col-md-2"><label class="form-label" for="p1-precision">Dokładność (bity)</label><input class="form-control" id="p1-precision" type="number" min="1" max="24" value="8"></div>
+        <div class="col-md-2"><label class="form-label" for="p1-population">Populacja</label><input class="form-control" id="p1-population" type="number" min="2" step="2" value="40"></div>
+        <div class="col-md-2"><label class="form-label" for="p1-epochs">Epoki</label><input class="form-control" id="p1-epochs" type="number" min="1" value="100"></div>
+        <div class="col-md-3"><label class="form-label" for="p1-selection">Selekcja</label><select class="form-select" id="p1-selection"><option value="tournament">Turniejowa</option><option value="best">Najlepszych</option><option value="worst">Najgorszych</option><option value="roulette">Ruletka</option></select></div>
+        <div class="col-md-2"><label class="form-label" for="p1-tournament">Rozmiar turnieju</label><input class="form-control" id="p1-tournament" type="number" min="2" value="3"></div>
+        <div class="col-md-3"><label class="form-label" for="p1-crossover">Krzyżowanie</label><select class="form-select" id="p1-crossover"><option value="two_point">Dwupunktowe</option><option value="one_point">Jednopunktowe</option><option value="uniform">Jednorodne</option><option value="grain">Ziarniste</option></select></div>
+        <div class="col-md-2"><label class="form-label" for="p1-crossover-probability">Prawd. krzyżowania</label><input class="form-control" id="p1-crossover-probability" type="number" min="0" max="1" step="0.01" value="0.8"></div>
+        <div class="col-md-3"><label class="form-label" for="p1-mutation">Mutacja</label><select class="form-select" id="p1-mutation"><option value="one_point">Jednopunktowa</option><option value="boundary">Brzegowa</option><option value="two_point">Dwupunktowa</option></select></div>
+        <div class="col-md-2"><label class="form-label" for="p1-mutation-probability">Prawd. mutacji</label><input class="form-control" id="p1-mutation-probability" type="number" min="0" max="1" step="0.01" value="0.02"></div>
+        <div class="col-md-2"><label class="form-label" for="p1-inversion-probability">Prawd. inwersji</label><input class="form-control" id="p1-inversion-probability" type="number" min="0" max="1" step="0.01" value="0.05"></div>
+        <div class="col-md-2"><label class="form-label" for="p1-elite-mode">Elityzm</label><select class="form-select" id="p1-elite-mode"><option value="count">Liczba osobników</option><option value="percentage">Procent populacji</option></select></div>
+        <div class="col-md-2"><label class="form-label" for="p1-elite-value">Wartość elityzmu</label><input class="form-control" id="p1-elite-value" type="number" min="0" value="2"></div>
+        <div class="col-md-2"><label class="form-label" for="p1-repetitions">Powtórzenia</label><input class="form-control" id="p1-repetitions" type="number" min="1" max="100" value="10"></div>
+        <div class="col-12 d-flex gap-2"><button class="btn btn-primary" id="p1-run" type="submit">Uruchom pojedynczo</button><button class="btn btn-outline-primary" id="p1-experiment" type="button">Uruchom eksperyment</button></div>
+    </form>
+    <div id="p1-status" class="alert d-none mt-3" role="status"></div>
+    <div id="p1-result" class="mt-4"></div>
+    <div class="row g-4 mt-1"><div class="col-lg-6"><canvas id="p1-objective-chart"></canvas></div><div class="col-lg-6"><canvas id="p1-stats-chart"></canvas></div></div>
+</section>
