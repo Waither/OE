@@ -64,6 +64,34 @@ wynik. `create_csv()` koduje rekordy CSV, a `saveChartPng()` wysyła obraz
 Chart.js do backendu. Każdy projekt nadal sam określa swoje parametry,
 obliczenia i dane wynikowe.
 
+## Projekt 1 — klasyczny algorytm genetyczny
+
+Pierwsza wersja P1 wykorzystuje binarny chromosom i implementuje pełny
+przebieg algorytmu genetycznego po stronie FastAPI. Wybrane benchmarki są
+ładowane z biblioteki `opfunu`:
+
+- **Ackley01** — funkcja łatwiejsza, dziedzina `[-35, 35]`, optimum `0` dla
+  wektora zerowego, wymiary od 1 do 30;
+- **CEC 2014 F1** — funkcja trudniejsza z pakietu CEC 2014, dziedzina
+  `[-100, 100]`, dostępne wymiary 10, 20, 30, 50 i 100.
+
+Endpoint `GET /api/p1/benchmarks` zwraca metadane funkcji. Endpoint
+`POST /api/p1/run` uruchamia algorytm i zapisuje seed, konfigurację oraz
+historię każdej epoki w SQLite. Konfiguracja obejmuje dokładność kodowania,
+rozmiar populacji, liczbę epok, minimalizację/maksymalizację, cztery metody
+selekcji, cztery metody krzyżowania, trzy metody mutacji, inwersję i elityzm.
+
+Przykładowe uruchomienie:
+
+```powershell
+curl.exe -X POST http://localhost:8000/api/p1/run `
+  -H "Content-Type: application/json" `
+  -d '{\"function_key\":\"ackley01\",\"dimensions\":5,\"epochs\":50,\"seed\":123}'
+```
+
+Warstwa GUI projektu 1 będzie korzystać z tych endpointów; osobna warstwa
+algorytmu pozwala testować obliczenia niezależnie od interfejsu.
+
 Tworzenie tabel przez `create_all()` jest wystarczające dla obecnego prototypu.
 Gdy schemat zacznie ewoluować, przed pracą na wspólnej bazie należy dodać
 migracje Alembic.

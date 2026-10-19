@@ -9,6 +9,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
+        "test": "node --check src/js/projects/p1.js && node --check src/js/router.js",
         "preview": "vite preview"
     },
     "dependencies": {
