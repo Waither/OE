@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 
 class RunRead(BaseModel):
@@ -14,6 +14,11 @@ class RunRead(BaseModel):
     algorithm_version: str
     parameters: dict[str, Any]
     result_data: Any
+
+    @computed_field
+    @property
+    def seed_exact(self) -> str:
+        return str(self.seed)
 
 
 class ChartArtifactRead(BaseModel):

@@ -25,16 +25,17 @@
 
         <div class="row g-3 mb-3">
             <div class="col-md-4">
-                <label class="form-label" for="p1-precision">Dokładność (bity)</label>
+                <label class="form-label" for="p1-precision">Dokładność dziesiętna (cyfry)</label>
                 <input class="form-control" id="p1-precision" type="number" min="1" max="24" value="8">
+                <div class="form-text">Liczba cyfr dokładności dziesiętnej; długość chromosomu jest wyliczana automatycznie.</div>
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="p1-population">Populacja</label>
-                <input class="form-control" id="p1-population" type="number" min="2" step="2" value="40">
+                <input class="form-control" id="p1-population" type="number" min="2" max="2000" step="2" value="40">
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="p1-epochs">Epoki</label>
-                <input class="form-control" id="p1-epochs" type="number" min="1" value="100">
+                <input class="form-control" id="p1-epochs" type="number" min="1" max="10000" value="100">
             </div>
         </div>
 
@@ -152,12 +153,12 @@
 
         <div class="row g-3 mb-3">
             <div class="col-md-6">
-                <label class="form-label" for="p1-repetitions">Powtórzenia</label>
-                <input class="form-control" id="p1-repetitions" type="number" min="1" max="100" value="10">
+                <label class="form-label" for="p1-repetitions">Powtórzenia eksperymentu</label>
+                <input class="form-control" id="p1-repetitions" type="number" min="10" max="100" value="10">
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="p1-seed">Seed (puste = losowy)</label>
-                <input class="form-control" id="p1-seed" type="number" min="0" step="1" placeholder="Losowy">
+                <input class="form-control" id="p1-seed" type="number" min="0" max="9223372036854775807" step="1" placeholder="Losowy">
             </div>
         </div>
 
@@ -174,7 +175,7 @@
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
             <div>
                 <h2 class="h4 mb-1" id="p1-history-heading">Historia uruchomień P1</h2>
-                <p class="text-muted mb-0">Ostatnie 50 uruchomień zapisanych w lokalnej bazie SQLite.</p>
+                <p class="text-muted mb-0">Ostatnie 50 uruchomień</p>
             </div>
             <button class="btn btn-outline-secondary btn-sm" id="p1-history-refresh" type="button">Odśwież historię</button>
         </div>
@@ -186,10 +187,11 @@
                         <th scope="col">Data</th>
                         <th scope="col">Funkcja</th>
                         <th scope="col">Wymiary</th>
+                        <th scope="col">Eksperyment</th>
                         <th scope="col">Seed</th>
                         <th scope="col">Najlepszy wynik</th>
                         <th scope="col">Czas wykonania</th>
-                        <th scope="col">Błąd od optimum</th>
+                        <th scope="col">Błąd od znanego optimum (min.)</th>
                         <th scope="col">Akcje</th>
                     </tr>
                 </thead>
