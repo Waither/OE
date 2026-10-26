@@ -105,7 +105,7 @@ Celem było zastąpienie binarnej reprezentacji chromosomu reprezentacją rzeczy
 
 - Python 3.14.3, FastAPI, NumPy, SQLAlchemy i Uvicorn,
 - `benchmark_functions` — funkcja Hyperellipsoid,
-- `opfunu` — funkcja Ackley 01 oraz CEC2014 F3,
+- `opfunu` — funkcja Ackley 01, CEC2014 F1 (zgodna z P1) oraz dodatkowo CEC2014 F3,
 - JavaScript, Vite, Chart.js — interfejs i wykresy,
 - Matplotlib — wykresy do sprawozdania.
 

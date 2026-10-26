@@ -91,6 +91,19 @@ class P2P3RoutesTest(unittest.TestCase):
         self.assertIsInstance(body["run_id"], str)
         self.assert_history_record(body["run_id"], "p2", "p2-ga-1.1")
 
+    def test_p2_exposes_and_runs_same_cec2014_f1_as_p1(self):
+        benchmarks = self.client.get("/api/p2/benchmarks")
+        self.assertEqual(benchmarks.status_code, 200, benchmarks.text)
+        cec_f1 = next(item for item in benchmarks.json() if item["key"] == "cec2014_f1")
+        self.assertEqual(cec_f1["source"], "opfunu.cec_based.cec2014.F12014")
+        self.assertEqual(cec_f1["optimum"], 100.0)
+
+        payload = self.p2_payload()
+        payload.update({"function_key": "cec2014_f1", "dimensions": 10})
+        response = self.client.post("/api/p2/run", json=payload)
+        self.assertEqual(response.status_code, 201, response.text)
+        self.assert_history_record(response.json()["run_id"], "p2", "p2-ga-1.1")
+
     def test_p2_experiment_persists_each_run(self):
         payload = self.p2_payload()
         payload["repetitions"] = 10

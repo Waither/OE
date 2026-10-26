@@ -9,6 +9,7 @@ from typing import Callable, Literal
 import numpy as np
 import benchmark_functions as bf
 from opfunu import cec_based
+from opfunu.cec_based.cec2014 import F12014
 from opfunu.name_based.a_func import Ackley01
 
 Objective = Literal["minimize", "maximize"]
@@ -36,6 +37,7 @@ class BenchmarkDefinition:
 BENCHMARKS = {
     "ackley01": BenchmarkDefinition("ackley01", "Ackley 01", "opfunu.name_based.a_func.Ackley01", tuple(range(2, 31)), -35.0, 35.0, 0.0, lambda n: Ackley01(ndim=n)),
     "hyperellipsoid": BenchmarkDefinition("hyperellipsoid", "Hyperellipsoid", "benchmark_functions.Hyperellipsoid", tuple(range(2, 31)), -65.536, 65.536, 0.0, lambda n: bf.Hyperellipsoid(n_dimensions=n)),
+    "cec2014_f1": BenchmarkDefinition("cec2014_f1", "CEC 2014 F1 (Rotated High Conditioned Elliptic)", "opfunu.cec_based.cec2014.F12014", (10, 20, 30, 50, 100), -100.0, 100.0, 100.0, lambda n: F12014(ndim=n)),
     "cec2014_f3": BenchmarkDefinition("cec2014_f3", "CEC 2014 F3", "opfunu.cec_based.cec2014.F32014", (10, 20, 30, 50, 100), -100.0, 100.0, 300.0, lambda n: cec_based.cec2014.F32014(ndim=n)),
 }
 
