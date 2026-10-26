@@ -62,7 +62,7 @@ function formatExperimentConfiguration(configuration) {
     const values = [
         ['Funkcja', benchmark?.name ?? configuration.function_key],
         ['Wymiary', configuration.dimensions],
-        ['DokĹ‚adnoĹ›Ä‡ (cyfry dziesiÄ™tne)', configuration.precision],
+        ['Dokładność (cyfry dziesiętne)', configuration.precision],
         ['Rozmiar populacji', configuration.population_size],
         ['Liczba epok', configuration.epochs],
         ['Cel', configuration.objective === 'minimize' ? 'Minimalizacja' : 'Maksymalizacja'],
@@ -73,24 +73,24 @@ function formatExperimentConfiguration(configuration) {
             tournament: 'Turniejowa',
         }[configuration.selection]],
         ['Rozmiar turnieju', configuration.tournament_size],
-        ['KrzyĹĽowanie', {
+        ['Krzyżowanie', {
             arithmetic: 'Arytmetyczne',
             linear: 'Linearne',
             blend_alpha: 'Mieszające alfa',
             blend_alpha_beta: 'Mieszające alfa i beta',
             average: 'Uśredniające',
         }[configuration.crossover]],
-        ['PrawdopodobieĹ„stwo krzyĹĽowania', formatPercentage(configuration.crossover_probability)],
+        ['Prawdopodobieństwo krzyżowania', formatPercentage(configuration.crossover_probability)],
         ['Mutacja', {
             uniform: 'Równomierna',
             gaussian: 'Gaussa',
         }[configuration.mutation]],
-        ['PrawdopodobieĹ„stwo mutacji', formatPercentage(configuration.mutation_probability)],
+        ['Prawdopodobieństwo mutacji', formatPercentage(configuration.mutation_probability)],
         ['Parametr alfa', configuration.alpha],
         ['Parametr beta', configuration.beta],
         ['Sigma mutacji Gaussa', configuration.gaussian_sigma],
-        ['Elityzm', configuration.elite_mode === 'count' ? 'Liczba osobnikĂłw' : 'Procent populacji'],
-        ['WartoĹ›Ä‡ elityzmu', configuration.elite_mode === 'count'
+        ['Elityzm', configuration.elite_mode === 'count' ? 'Liczba osobników' : 'Procent populacji'],
+        ['Wartość elityzmu', configuration.elite_mode === 'count'
             ? `${configuration.elite_value} os.`
             : `${configuration.elite_value}%`],
     ];
@@ -152,23 +152,23 @@ function drawCharts(history) {
     objectiveChart = new Chart($('p2-objective-chart'), {
         type: 'line',
         data: { labels, datasets: [
-            { label: 'Najlepsza wartoĹ›Ä‡', data: history.map((item) => item.best), borderColor: '#0d6efd' },
-            { label: 'Najgorsza wartoĹ›Ä‡', data: history.map((item) => item.worst), borderColor: '#dc3545' },
+            { label: 'Najlepsza wartość', data: history.map((item) => item.best), borderColor: '#0d6efd' },
+            { label: 'Najgorsza wartość', data: history.map((item) => item.worst), borderColor: '#dc3545' },
         ] },
-        options: { responsive: true, plugins: { title: { display: true, text: 'WartoĹ›Ä‡ funkcji wzglÄ™dem epoki' } } },
+        options: { responsive: true, plugins: { title: { display: true, text: 'Wartość funkcji względem epoki' } } },
     });
     statsChart = new Chart($('p2-stats-chart'), {
         type: 'line',
         data: { labels, datasets: [
-            { label: 'Ĺšrednia', data: history.map((item) => item.mean), borderColor: '#198754' },
+            { label: 'Średnia', data: history.map((item) => item.mean), borderColor: '#198754' },
             { label: 'Odchylenie standardowe', data: history.map((item) => item.standard_deviation), borderColor: '#fd7e14' },
         ] },
-        options: { responsive: true, plugins: { title: { display: true, text: 'Ĺšrednia i odchylenie standardowe' } } },
+        options: { responsive: true, plugins: { title: { display: true, text: 'Średnia i odchylenie standardowe' } } },
     });
 }
 
 function showResult(result, label = 'Wynik') {
-    $('p2-result').innerHTML = `<div class="card"><div class="card-body"><h2 class="h5">${label}</h2><dl class="row mb-0"><dt class="col-sm-5">WartoĹ›Ä‡ funkcji</dt><dd class="col-sm-7">${result.best_objective}</dd><dt class="col-sm-5">Czas obliczeĹ„</dt><dd class="col-sm-7">${result.elapsed_seconds.toFixed(4)} s</dd><dt class="col-sm-5">Najlepszy wektor</dt><dd class="col-sm-7 text-break">${result.best_values.join(', ')}</dd></dl></div></div>`;
+    $('p2-result').innerHTML = `<div class="card"><div class="card-body"><h2 class="h5">${label}</h2><dl class="row mb-0"><dt class="col-sm-5">Wartość funkcji</dt><dd class="col-sm-7">${result.best_objective}</dd><dt class="col-sm-5">Czas obliczeń</dt><dd class="col-sm-7">${result.elapsed_seconds.toFixed(4)} s</dd><dt class="col-sm-5">Najlepszy wektor</dt><dd class="col-sm-7 text-break">${result.best_values.join(', ')}</dd></dl></div></div>`;
     drawCharts(result.history);
 }
 
@@ -186,7 +186,7 @@ function createHistoryCell(text) {
 }
 
 function formatSeconds(value) {
-    if (typeof value !== 'number' || !Number.isFinite(value)) return 'â€”';
+    if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
     if (value < 1) return `${(value * 1000).toLocaleString(undefined, { maximumFractionDigits: 2 })} ms`;
     return `${value.toLocaleString(undefined, { maximumFractionDigits: 3 })} s`;
 }
@@ -196,7 +196,7 @@ async function responseError(response) {
     try {
         body = await response.json();
     } catch {
-        return `BĹ‚Ä…d ${response.status}: ${response.statusText}`;
+        return `Błąd ${response.status}: ${response.statusText}`;
     }
     const detail = body.detail;
     if (Array.isArray(detail)) {
@@ -207,7 +207,7 @@ async function responseError(response) {
     }
     return typeof detail === 'string'
         ? detail
-        : `BĹ‚Ä…d ${response.status}: ${response.statusText}`;
+        : `Błąd ${response.status}: ${response.statusText}`;
 }
 
 function renderHistory(runs) {
@@ -233,13 +233,13 @@ function renderHistory(runs) {
 
         row.append(
             createHistoryCell(dateText),
-            createHistoryCell(String(parameters.function_key ?? 'â€”')),
-            createHistoryCell(String(parameters.dimensions ?? 'â€”')),
-            createHistoryCell(experimentId ?? 'â€”'),
+            createHistoryCell(String(parameters.function_key ?? '—')),
+            createHistoryCell(String(parameters.dimensions ?? '—')),
+            createHistoryCell(experimentId ?? '—'),
             createHistoryCell(run.seed_exact ?? String(run.seed)),
-            createHistoryCell(typeof bestObjective === 'number' ? bestObjective.toLocaleString() : 'â€”'),
+            createHistoryCell(typeof bestObjective === 'number' ? bestObjective.toLocaleString() : '—'),
             createHistoryCell(formatSeconds(result.elapsed_seconds)),
-            createHistoryCell(optimumError === null ? 'â€”' : optimumError.toLocaleString(undefined, { maximumFractionDigits: 5 })),
+            createHistoryCell(optimumError === null ? '—' : optimumError.toLocaleString(undefined, { maximumFractionDigits: 5 })),
         );
 
         const actions = document.createElement('td');
@@ -270,7 +270,7 @@ function renderHistory(runs) {
         list.append(row);
     }
 
-    setHistoryStatus(runs.length ? `WyĹ›wietlono ${runs.length} zapisanych uruchomieĹ„.` : 'Brak zapisanych uruchomieĹ„ p2.');
+    setHistoryStatus(runs.length ? `Wyświetlono ${runs.length} zapisanych uruchomień.` : 'Brak zapisanych uruchomień p2.');
 }
 
 function loadHistoricalParameters(run) {
@@ -298,7 +298,7 @@ function loadHistoricalParameters(run) {
     };
 
     if (!benchmarks.some((item) => item.key === parameters.function_key)) {
-        setHistoryStatus('Nie moĹĽna wgraÄ‡ parametrĂłw: zapis wskazuje nieznanÄ… funkcjÄ™.', true);
+        setHistoryStatus('Nie można wgrać parametrów: zapis wskazuje nieznaną funkcję.', true);
         return;
     }
 
@@ -319,45 +319,45 @@ function loadHistoricalParameters(run) {
     $('p2-seed').value = run.seed_exact ?? String(run.seed);
     $('p2-repetitions').value = '10';
     $('p2-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setHistoryStatus('Wgrano parametry zapisanego uruchomienia. MoĹĽesz od razu uruchomiÄ‡ je ponownie.');
+    setHistoryStatus('Wgrano parametry zapisanego uruchomienia. Możesz od razu uruchomić je ponownie.');
 }
 
 async function refreshHistory() {
-    setHistoryStatus('Wczytywanie historiiâ€¦');
+    setHistoryStatus('Wczytywanie historii…');
     try {
         const runs = await listRuns('p2', 50);
         renderHistory(runs);
     } catch (error) {
-        setHistoryStatus(`Nie udaĹ‚o siÄ™ wczytaÄ‡ historii: ${error.message}`, true);
+        setHistoryStatus(`Nie udało się wczytać historii: ${error.message}`, true);
     }
 }
 
 async function loadHistoricalRun(runId) {
-    setHistoryStatus('Wczytywanie zapisanego uruchomieniaâ€¦');
+    setHistoryStatus('Wczytywanie zapisanego uruchomienia…');
     try {
         const run = await getRun(runId);
         if (run.project_key !== 'p2') {
             throw new Error('To uruchomienie nie należy do Projektu 2.');
         }
         const createdAt = new Date(run.created_at).toLocaleString();
-        showResult(run.result_data, `Zapisane uruchomienie â€” ${createdAt} (seed ${run.seed_exact ?? run.seed})`);
-        setHistoryStatus('Wczytano zapisany wynik i historiÄ™ epok.');
+        showResult(run.result_data, `Zapisane uruchomienie — ${createdAt} (seed ${run.seed_exact ?? run.seed})`);
+        setHistoryStatus('Wczytano zapisany wynik i historię epok.');
     } catch (error) {
-        setHistoryStatus(`Nie udaĹ‚o siÄ™ wczytaÄ‡ uruchomienia: ${error.message}`, true);
+        setHistoryStatus(`Nie udało się wczytać uruchomienia: ${error.message}`, true);
     }
 }
 
 async function runSingle(event) {
     event.preventDefault();
     if (!$('p2-form').reportValidity()) return;
-    showStatus('Trwa obliczanieâ€¦');
+    showStatus('Trwa obliczanie…');
     try {
         const response = await fetch('/api/p2/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload()) });
         if (!response.ok) throw new Error(await responseError(response));
         const data = await response.json();
         $('p2-seed').value = data.seed_exact;
         showResult(data.result, `Pojedyncze uruchomienie (seed ${data.seed_exact})`);
-        showStatus('Obliczenia zakoĹ„czone.', 'success');
+        showStatus('Obliczenia zakończone.', 'success');
         void refreshHistory();
     } catch (error) {
         showStatus(error.message, 'danger');
@@ -366,7 +366,7 @@ async function runSingle(event) {
 
 async function runExperiment() {
     if (!$('p2-form').reportValidity()) return;
-    showStatus('Trwa seria powtĂłrzeĹ„â€¦');
+    showStatus('Trwa seria powtórzeń…');
     try {
         const response = await fetch('/api/p2/experiment', {
             method: 'POST',
@@ -378,16 +378,16 @@ async function runExperiment() {
         $('p2-seed').value = data.seed_exact;
         const summary = data.summary;
         const averageError = summary.average_error === null
-            ? 'Nie dotyczy â€” brak znanego optimum maksymalnego dla tego benchmarku.'
+            ? 'Nie dotyczy — brak znanego optimum maksymalnego dla tego benchmarku.'
             : summary.average_error;
         const objectiveDirection = data.configuration.objective;
         const bestRun = data.runs.reduce((best, run) => objectiveDirection === 'minimize'
             ? (run.result.best_objective < best.result.best_objective ? run : best)
             : (run.result.best_objective > best.result.best_objective ? run : best));
         const runRows = data.runs.map((run, index) => `<tr><th scope="row">${index + 1}</th><td>${run.seed_exact}</td><td>${run.result.best_objective}</td><td>${formatSeconds(run.result.elapsed_seconds)}</td><td><code>${run.run_id}</code></td></tr>`).join('');
-        $('p2-result').innerHTML = `<div class="card"><div class="card-body"><h2 class="h5">Eksperyment â€” ${data.repetitions} powtĂłrzeĹ„</h2><dl class="row"><dt class="col-sm-3">Identyfikator</dt><dd class="col-sm-9"><code>${data.experiment_id}</code></dd><dt class="col-sm-3">Seed bazowy</dt><dd class="col-sm-9">${data.seed_exact}</dd><dt class="col-sm-3">Ĺšredni wynik</dt><dd class="col-sm-9">${summary.average_objective}</dd><dt class="col-sm-3">Najlepszy wynik</dt><dd class="col-sm-9">${summary.best_objective}</dd><dt class="col-sm-3">Najgorszy wynik</dt><dd class="col-sm-9">${summary.worst_objective}</dd><dt class="col-sm-3">Ĺšredni bĹ‚Ä…d wzglÄ™dem znanego optimum minimalizacyjnego</dt><dd class="col-sm-9">${averageError}</dd><dt class="col-sm-3">Ĺšredni czas obliczeĹ„</dt><dd class="col-sm-9">${formatSeconds(summary.average_elapsed_seconds)}</dd></dl><h3 class="h6 mt-3">UĹĽyta konfiguracja</h3>${formatExperimentConfiguration(data.configuration)}<h3 class="h6 mt-4">Wyniki powtĂłrzeĹ„</h3><div class="table-responsive"><table class="table table-sm table-striped"><thead><tr><th scope="col">#</th><th scope="col">Seed</th><th scope="col">Najlepszy wynik</th><th scope="col">Czas obliczeĹ„</th><th scope="col">ID uruchomienia</th></tr></thead><tbody>${runRows}</tbody></table></div><p class="small text-muted mb-0">Wykresy poniĹĽej pokazujÄ… najlepszy przebieg dla celu: ${objectiveDirection === 'minimize' ? 'minimalizacji' : 'maksymalizacji'}, seed ${bestRun.seed_exact} (uruchomienie ${bestRun.run_id}).</p></div></div>`;
+        $('p2-result').innerHTML = `<div class="card"><div class="card-body"><h2 class="h5">Eksperyment — ${data.repetitions} powtórzeń</h2><dl class="row"><dt class="col-sm-3">Identyfikator</dt><dd class="col-sm-9"><code>${data.experiment_id}</code></dd><dt class="col-sm-3">Seed bazowy</dt><dd class="col-sm-9">${data.seed_exact}</dd><dt class="col-sm-3">Średni wynik</dt><dd class="col-sm-9">${summary.average_objective}</dd><dt class="col-sm-3">Najlepszy wynik</dt><dd class="col-sm-9">${summary.best_objective}</dd><dt class="col-sm-3">Najgorszy wynik</dt><dd class="col-sm-9">${summary.worst_objective}</dd><dt class="col-sm-3">Średni błąd względem znanego optimum minimalizacyjnego</dt><dd class="col-sm-9">${averageError}</dd><dt class="col-sm-3">Średni czas obliczeń</dt><dd class="col-sm-9">${formatSeconds(summary.average_elapsed_seconds)}</dd></dl><h3 class="h6 mt-3">Użyta konfiguracja</h3>${formatExperimentConfiguration(data.configuration)}<h3 class="h6 mt-4">Wyniki powtórzeń</h3><div class="table-responsive"><table class="table table-sm table-striped"><thead><tr><th scope="col">#</th><th scope="col">Seed</th><th scope="col">Najlepszy wynik</th><th scope="col">Czas obliczeń</th><th scope="col">ID uruchomienia</th></tr></thead><tbody>${runRows}</tbody></table></div><p class="small text-muted mb-0">Wykresy poniżej pokazują najlepszy przebieg dla celu: ${objectiveDirection === 'minimize' ? 'minimalizacji' : 'maksymalizacji'}, seed ${bestRun.seed_exact} (uruchomienie ${bestRun.run_id}).</p></div></div>`;
         drawCharts(bestRun.result.history);
-        showStatus('Eksperyment zakoĹ„czony.', 'success');
+        showStatus('Eksperyment zakończony.', 'success');
         void refreshHistory();
     } catch (error) {
         showStatus(error.message, 'danger');

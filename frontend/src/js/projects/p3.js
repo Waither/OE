@@ -1,6 +1,29 @@
 const $ = (id) => document.getElementById(id);
 const form = $('p3-form');
 
+const binaryCrossovers = [['single_point', 'Jednopunktowe'], ['two_points', 'Dwupunktowe'], ['uniform', 'Jednorodne']];
+const realCrossovers = [
+    ['single_point', 'Jednopunktowe'], ['two_points', 'Dwupunktowe'], ['uniform', 'Jednorodne'],
+    ['arithmetic', 'Arytmetyczne'], ['blend_alpha', 'Mieszające alfa (BLX-α)'],
+    ['blend_alpha_beta', 'Mieszające alfa i beta (BLX-αβ)'], ['average', 'Uśredniające'],
+];
+
+function updateRepresentationOptions() {
+    const real = $('p3-representation').value === 'real';
+    const crossover = $('p3-crossover');
+    const selectedCrossover = crossover.value;
+    const options = real ? realCrossovers : binaryCrossovers;
+    crossover.innerHTML = options.map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
+    crossover.value = options.some(([value]) => value === selectedCrossover) ? selectedCrossover : 'single_point';
+    $('p3-lower-bound-field').classList.toggle('d-none', !real);
+    $('p3-upper-bound-field').classList.toggle('d-none', !real);
+    const mutation = $('p3-mutation');
+    const mutationOptions = real ? [['random', 'Losowa'], ['gaussian', 'Gaussa']] : [['random', 'Losowa'], ['swap', 'Zamiana indeksów']];
+    const selectedMutation = mutation.value;
+    mutation.innerHTML = mutationOptions.map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
+    mutation.value = mutationOptions.some(([value]) => value === selectedMutation) ? selectedMutation : 'random';
+}
+
 function config() {
     const population = Number($('p3-population').value);
     return {
@@ -11,6 +34,8 @@ function config() {
         num_generations: Number($('p3-generations').value),
         sol_per_pop: population,
         num_parents_mating: Math.max(2, Math.floor(population / 2)),
+        lower_bound: Number($('p3-lower-bound').value),
+        upper_bound: Number($('p3-upper-bound').value),
         parent_selection_type: $('p3-selection').value,
         crossover_type: $('p3-crossover').value,
         mutation_type: $('p3-mutation').value,
@@ -35,3 +60,6 @@ form?.addEventListener('submit', async (event) => {
         $('p3-status').textContent = `Błąd: ${error.message}`;
     }
 });
+
+$('p3-representation')?.addEventListener('change', updateRepresentationOptions);
+updateRepresentationOptions();

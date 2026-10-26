@@ -115,9 +115,9 @@ def objective_function(values: Any, function_key: str = "quadratic") -> float:
     return result + sum(value * value for value in values[2:])
 
 
-def fitnessFunction(individual: Any) -> tuple[float]:
+def fitnessFunction(individual: Any, dimensions: int = 2, function_key: str = "quadratic") -> tuple[float]:
     """Wersja funkcji celu zgodna z poleceniem (zwraca krotkę)."""
-    return (objective_function(decodeInd(individual)),)
+    return (objective_function(decodeInd(individual, dimensions), function_key),)
 
 
 def _real_crossover(parents: np.ndarray, offspring_size: tuple[int, int], ga_instance: Any) -> np.ndarray:
@@ -190,11 +190,13 @@ def run(config: GAConfig, seed: int | None = None) -> GARunResult:
         kwargs["mutation_type"] = _gaussian_mutation
     if config.representation == "binary":
         kwargs.update(init_range_low=0, init_range_high=2, gene_type=int, gene_space=[0, 1],
-                      crossover_type=config.crossover_type, mutation_by_replacement=True)
+                      crossover_type=config.crossover_type,
+                      mutation_by_replacement=config.mutation_type == "random")
     else:
         kwargs.update(init_range_low=config.lower_bound, init_range_high=config.upper_bound, gene_type=float,
                       crossover_type=_real_crossover, random_mutation_min_val=config.lower_bound,
-                      random_mutation_max_val=config.upper_bound, mutation_by_replacement=True)
+                      random_mutation_max_val=config.upper_bound,
+                      mutation_by_replacement=config.mutation_type == "random")
     ga = pygad.GA(**kwargs)
     ga.p3_crossover_type = config.crossover_type
     ga.p3_gaussian_sigma = (config.upper_bound - config.lower_bound) * 0.1

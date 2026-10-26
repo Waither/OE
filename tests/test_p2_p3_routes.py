@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from backend.database import get_db
 from backend.main import app
 from backend.models import Base
+from backend.projects.p3.logic import fitnessFunction
 
 
 class P2P3RoutesTest(unittest.TestCase):
@@ -100,12 +101,28 @@ class P2P3RoutesTest(unittest.TestCase):
         for run in runs:
             self.assert_history_record(run["run_id"], "p2", "p2-ga-1.1")
 
+    def test_p2_compare_with_binary_representation_returns_both_results(self):
+        payload = self.p2_payload()
+        payload["repetitions"] = 10
+        response = self.client.post("/api/p2/compare", json=payload)
+        self.assertEqual(response.status_code, 201, response.text)
+        body = response.json()
+        self.assertEqual(body["repetitions"], 10)
+        self.assertIn("binary", body)
+        self.assertIn("real", body)
+        for representation in ("binary", "real"):
+            self.assertIn("average_objective", body[representation])
+            self.assertIn("average_elapsed_seconds", body[representation])
+
     def test_p3_run_is_persisted_in_history(self):
         response = self.client.post("/api/p3/run", json=self.p3_payload())
         self.assertEqual(response.status_code, 201, response.text)
         body = response.json()
         self.assertIsInstance(body["run_id"], str)
         self.assert_history_record(body["run_id"], "p3", "p3-pygad-1.0")
+
+    def test_p3_fitness_function_supports_configurable_dimensions(self):
+        self.assertEqual(fitnessFunction([1, 1, 1, 1, 1, 1], dimensions=3), (21.0,))
 
     def test_p3_experiment_is_validated_and_persists_each_run(self):
         payload = self.p3_payload()

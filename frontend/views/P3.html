@@ -12,6 +12,8 @@
             <div class="col-md-3"><label class="form-label" for="p3-function">Funkcja</label><select id="p3-function" class="form-select"><option value="quadratic">Kwadratowa</option><option value="hyperellipsoid">Hyperellipsoid</option><option value="ackley01">Ackley 01</option><option value="cec2014_f3">CEC 2014 F3</option></select></div>
             <div class="col-md-3"><label class="form-label" for="p3-mutation">Mutacja</label><select id="p3-mutation" class="form-select"><option value="random">Losowa</option><option value="swap">Zamiana indeksów</option><option value="gaussian">Gaussa</option></select></div>
             <div class="col-md-3"><label class="form-label" for="p3-repetitions">Powtórzenia</label><input id="p3-repetitions" class="form-control" type="number" min="1" max="100" value="10"></div>
+            <div class="col-md-3 d-none" id="p3-lower-bound-field"><label class="form-label" for="p3-lower-bound">Dolna granica</label><input id="p3-lower-bound" class="form-control" type="number" step="any" value="-35"></div>
+            <div class="col-md-3 d-none" id="p3-upper-bound-field"><label class="form-label" for="p3-upper-bound">Górna granica</label><input id="p3-upper-bound" class="form-control" type="number" step="any" value="35"></div>
         </div>
         <div class="mt-3"><button class="btn btn-primary" type="submit">Uruchom eksperyment</button><span id="p3-status" class="ms-3 text-muted"></span></div>
     </form>
