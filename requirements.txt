@@ -8,3 +8,5 @@ scipy>=1.14
 setuptools<81
 pygad>=3.3,<4.0
 matplotlib>=3.8,<4.0
+mealpy==3.0.3
+pandas>=2.2,<3.0

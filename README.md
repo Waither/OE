@@ -50,3 +50,16 @@ python -m uvicorn backend.main:app
 
 Otwórz <http://localhost:8000>. Backend utworzy lokalną bazę SQLite przy
 pierwszym uruchomieniu.
+
+## Projekt 4 — MealPy
+
+Projekt 4 wykorzystuje algorytm Artificial Bee Colony z biblioteki MealPy.
+W środowisku Python 3.14 MealPy 3.0.3 należy zainstalować bez wymuszania
+starego NumPy, ponieważ jego metadane zależności nie uwzględniają jeszcze
+NumPy 2.x:
+
+```powershell
+python -m pip install --no-deps mealpy==3.0.3
+python -m pip install pandas
+python p4_console.py --function ackley01 --dimensions 5
+```
