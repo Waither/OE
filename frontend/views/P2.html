@@ -1,1 +1,204 @@
-<h1>Projekt 2</h1>
+﻿<section class="p2-page">
+    <div class="mb-4">
+        <h1>Projekt 2 - rzeczywista reprezentacja chromosomu</h1>
+        <p class="text-muted">Operatory krzyżowania i mutacji dla chromosomu rzeczywistego.</p>
+    </div>
+
+    <form id="p2-form">
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label" for="p2-function">Funkcja</label>
+                <select class="form-select" id="p2-function"></select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="p2-dimensions">Zmienne</label>
+                <select class="form-select" id="p2-dimensions"></select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="p2-objective">Cel</label>
+                <select class="form-select" id="p2-objective">
+                    <option value="minimize">Minimalizacja</option>
+                    <option value="maximize">Maksymalizacja</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label" for="p2-precision">Precyzja</label>
+                <input class="form-control" id="p2-precision" type="number" min="1" max="24" value="8">
+                <div class="form-text">Pole zachowane dla zgodności z konfiguracją P1; chromosom zawiera liczby rzeczywiste.</div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="p2-population">Populacja</label>
+                <input class="form-control" id="p2-population" type="number" min="2" max="2000" step="2" value="40">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="p2-epochs">Epoki</label>
+                <input class="form-control" id="p2-epochs" type="number" min="1" max="10000" value="100">
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-8">
+                <label class="form-label" for="p2-selection">Selekcja</label>
+                <select class="form-select" id="p2-selection">
+                    <option value="tournament">Turniejowa</option>
+                    <option value="best">Najlepszych</option>
+                    <option value="worst">Najgorszych</option>
+                    <option value="roulette">Ruletka</option>
+                </select>
+            </div>
+            <div class="col-md-4" id="p2-tournament-field">
+                <label class="form-label" for="p2-tournament">Rozmiar turnieju</label>
+                <div class="input-group">
+                    <input class="form-control" id="p2-tournament" type="number" min="2" value="3">
+                    <span class="input-group-text">os.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="p2-crossover">KrzyĹĽowanie</label>
+                <div class="input-group">
+                    <label class="input-group-text" for="p2-crossover-enabled">
+                        <input class="form-check-input mt-0 me-2" id="p2-crossover-enabled" type="checkbox" checked>
+                        WĹ‚Ä…cz
+                    </label>
+                    <select class="form-select" id="p2-crossover">
+                        <option value="blend_alpha">Mieszające alfa (BLX-α)</option>
+                        <option value="arithmetic">Arytmetyczne</option>
+                        <option value="linear">Linearne</option>
+                        <option value="blend_alpha_beta">Mieszające alfa i beta</option>
+                        <option value="average">Uśredniające</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3" id="p2-crossover-probability-field">
+                <label class="form-label" for="p2-crossover-probability">Prawd. krzyĹĽowania</label>
+                <div class="input-group">
+                    <input class="form-control" id="p2-crossover-probability" type="number" min="0" max="1" step="0.01" value="0.8">
+                    <span class="input-group-text">0â€“1</span>
+                </div>
+            </div>
+            <div class="col-md-3 d-none" id="p2-grain-probability-field">
+                <label class="form-label" for="p2-grain-probability">Parametr alfa</label>
+                <div class="input-group">
+                    <input class="form-control" id="p2-grain-probability" type="number" min="0" max="5" step="0.01" value="0.5">
+                    <span class="input-group-text">α</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="p2-mutation">Mutacja</label>
+                <div class="input-group">
+                    <label class="input-group-text" for="p2-mutation-enabled">
+                        <input class="form-check-input mt-0 me-2" id="p2-mutation-enabled" type="checkbox" checked>
+                        WĹ‚Ä…cz
+                    </label>
+                    <select class="form-select" id="p2-mutation">
+                        <option value="gaussian">Gaussa</option>
+                        <option value="uniform">Równomierna</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3" id="p2-mutation-probability-field">
+                <label class="form-label" for="p2-mutation-probability">Prawd. mutacji</label>
+                <div class="input-group">
+                    <input class="form-control" id="p2-mutation-probability" type="number" min="0" max="1" step="0.01" value="0.02">
+                    <span class="input-group-text">0â€“1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label" for="p2-inversion-probability">Parametr beta</label>
+                <div class="input-group">
+                    <input class="form-control" id="p2-inversion-probability" type="number" min="0" max="5" step="0.01" value="0.25">
+                    <span class="input-group-text">β</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="p2-gaussian-sigma">Odchylenie mutacji Gaussa</label>
+                <input class="form-control" id="p2-gaussian-sigma" type="number" min="0" max="5" step="0.01" value="0.1">
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="p2-elite-mode">Elityzm</label>
+                <div class="input-group">
+                    <label class="input-group-text" for="p2-elitism-enabled">
+                        <input class="form-check-input mt-0 me-2" id="p2-elitism-enabled" type="checkbox" checked>
+                        WĹ‚Ä…cz
+                    </label>
+                    <select class="form-select" id="p2-elite-mode">
+                        <option value="count">Liczba osobnikĂłw</option>
+                        <option value="percentage">Procent populacji</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="p2-elite-value">WartoĹ›Ä‡ elityzmu</label>
+                <div class="input-group">
+                    <input class="form-control" id="p2-elite-value" type="number" min="0" value="2">
+                    <span class="input-group-text" id="p2-elite-value-unit">os.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="p2-repetitions">PowtĂłrzenia eksperymentu</label>
+                <input class="form-control" id="p2-repetitions" type="number" min="10" max="100" value="10">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="p2-seed">Seed (puste = losowy)</label>
+                <input class="form-control" id="p2-seed" type="number" min="0" max="9223372036854775807" step="1" placeholder="Losowy">
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-primary" id="p2-run" type="submit">Uruchom pojedynczo</button>
+            <button class="btn btn-outline-primary" id="p2-experiment" type="button">Uruchom eksperyment</button>
+            <button class="btn btn-outline-success" id="p2-compare" type="button">Porównaj z P1</button>
+        </div>
+    </form>
+    <div id="p2-status" class="alert d-none mt-3" role="status"></div>
+    <div id="p2-result" class="mt-4"></div>
+    <div class="row g-4 mt-1"><div class="col-lg-6"><canvas id="p2-objective-chart"></canvas></div><div class="col-lg-6"><canvas id="p2-stats-chart"></canvas></div></div>
+
+    <section class="mt-5" aria-labelledby="p2-history-heading">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+            <div>
+                <h2 class="h4 mb-1" id="p2-history-heading">Historia uruchomieĹ„ p2</h2>
+                <p class="text-muted mb-0">Ostatnie 50 uruchomieĹ„</p>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" id="p2-history-refresh" type="button">OdĹ›wieĹĽ historiÄ™</button>
+        </div>
+        <p id="p2-history-status" class="text-muted" role="status"></p>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col">Funkcja</th>
+                        <th scope="col">Wymiary</th>
+                        <th scope="col">Eksperyment</th>
+                        <th scope="col">Seed</th>
+                        <th scope="col">Najlepszy wynik</th>
+                        <th scope="col">Czas wykonania</th>
+                        <th scope="col">BĹ‚Ä…d od znanego optimum (min.)</th>
+                        <th scope="col">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody id="p2-history-list"></tbody>
+            </table>
+        </div>
+    </section>
+</section>
+
