@@ -25,7 +25,7 @@ class ABCRunRequest(BaseModel):
 
     @model_validator(mode="after")
     def validate_configuration(self) -> "ABCRunRequest":
-        ABCConfig(**self.model_dump(exclude={"seed"})).validate()
+        ABCConfig(**self.model_dump(exclude={"seed", "repetitions"})).validate()
         return self
 
 

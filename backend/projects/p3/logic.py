@@ -163,7 +163,11 @@ def _gaussian_mutation(offspring: np.ndarray, ga_instance: Any) -> np.ndarray:
 def run(config: GAConfig, seed: int | None = None) -> GARunResult:
     config.validate()
     actual_seed = random.SystemRandom().randrange(2**63) if seed is None else seed
-    np.random.seed(actual_seed % (2**32 - 1))
+    # PyGAD accepts random_seed values in the unsigned 32-bit range.
+    # The public API allows larger Python integers, so normalize once for
+    # both NumPy and PyGAD instead of passing an invalid 64-bit seed through.
+    actual_seed = actual_seed % (2**32)
+    np.random.seed(actual_seed)
     history: list[GenerationStats] = []
     started = time.perf_counter()
 

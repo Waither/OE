@@ -37,7 +37,7 @@ class GARunRequest(BaseModel):
 
     @model_validator(mode="after")
     def validate_configuration(self) -> "GARunRequest":
-        GAConfig(**self.model_dump(exclude={"seed"})).validate()
+        GAConfig(**self.model_dump(exclude={"seed", "repetitions"})).validate()
         return self
 
 
