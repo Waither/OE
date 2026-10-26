@@ -82,24 +82,37 @@ function formatConfiguration(parameters) {
     const crossoverNames = {
         one_point: '1 punkt',
         two_point: '2 punkty',
+        single_point: '1 punkt',
+        two_points: '2 punkty',
         uniform: 'Jednorodne',
         grain: 'Ziarniste',
+        arithmetic: 'Arytmetyczne',
+        linear: 'Linearne',
+        blend_alpha: 'Mieszające alfa',
+        blend_alpha_beta: 'Mieszające alfa i beta',
+        average: 'Uśredniające',
     };
     const mutationNames = {
         boundary: 'Brzegowa',
         one_point: '1 bit',
         two_point: '2 bity',
+        random: 'Losowa',
+        swap: 'Zamiana indeksów',
+        gaussian: 'Gaussa',
     };
 
-    const selectionName = selectionNames[parameters.selection] ?? parameters.selection ?? '—';
-    const selection = parameters.selection === 'tournament'
-        ? `${selectionName} (${parameters.tournament_size})`
+    const selectionKey = parameters.selection ?? parameters.parent_selection_type;
+    const crossoverKey = parameters.crossover ?? parameters.crossover_type;
+    const mutationKey = parameters.mutation ?? parameters.mutation_type;
+    const selectionName = selectionNames[selectionKey] ?? selectionKey ?? '—';
+    const selection = selectionKey === 'tournament'
+        ? `${selectionName} (${parameters.tournament_size ?? parameters.K_tournament ?? '—'})`
         : selectionName;
-    const crossoverName = crossoverNames[parameters.crossover] ?? parameters.crossover ?? '—';
+    const crossoverName = crossoverNames[crossoverKey] ?? crossoverKey ?? '—';
     const crossover = parameters.crossover_probability > 0
         ? `${crossoverName} · ${formatProbability(parameters.crossover_probability)}`
         : 'Wył.';
-    const mutationName = mutationNames[parameters.mutation] ?? parameters.mutation ?? '—';
+    const mutationName = mutationNames[mutationKey] ?? mutationKey ?? '—';
     const mutation = parameters.mutation_probability > 0
         ? `${mutationName} · ${formatProbability(parameters.mutation_probability)}`
         : 'Wył.';
@@ -107,10 +120,11 @@ function formatConfiguration(parameters) {
         ? formatProbability(parameters.inversion_probability)
         : 'Wył.';
     let elitism = 'Wył.';
-    if (parameters.elite_value > 0 && parameters.elite_mode === 'percentage') {
+    const eliteValue = parameters.elite_value ?? parameters.keep_elitism ?? 0;
+    if (eliteValue > 0 && parameters.elite_mode === 'percentage') {
         elitism = formatProbability(parameters.elite_value / 100);
-    } else if (parameters.elite_value > 0) {
-        elitism = `${parameters.elite_value} os.`;
+    } else if (eliteValue > 0) {
+        elitism = `${eliteValue} os.`;
     }
 
     return { selection, crossover, mutation, inversion, elitism };
@@ -123,7 +137,7 @@ function configurationCell(value, description) {
 }
 
 function supportsEpochMetrics() {
-    return $('history-project').value === 'p1';
+    return ['p1', 'p2', 'p3', 'p4'].includes($('history-project').value);
 }
 
 function renderProjectControls() {
@@ -222,7 +236,7 @@ function renderRuns() {
         checkbox.addEventListener('change', renderChart);
         selectionCell.append(checkbox);
 
-        row.append(
+            row.append(
             selectionCell,
             cell(formatDate(run.created_at)),
             cell(String(parameters.function_key ?? '—')),
@@ -231,7 +245,7 @@ function renderRuns() {
             cell(typeof result.best_objective === 'number' ? result.best_objective.toLocaleString() : '—'),
             cell(formatSeconds(result.elapsed_seconds)),
             configurationCell(configuration.selection, `Selekcja: ${configuration.selection}`),
-            configurationCell(configuration.crossover, parameters.crossover === 'grain'
+            configurationCell(configuration.crossover, (parameters.crossover ?? parameters.crossover_type) === 'grain'
                 ? `Krzyżowanie ziarniste; prawdopodobieństwo krzyżowania ${formatProbability(parameters.crossover_probability)}, zamiana bitu ${formatProbability(parameters.grain_probability)}`
                 : `Krzyżowanie: ${configuration.crossover}`),
             configurationCell(configuration.mutation, `Mutacja: ${configuration.mutation}`),
