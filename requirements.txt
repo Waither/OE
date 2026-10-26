@@ -6,3 +6,5 @@ opfunu>=1.0,<2.0
 benchmark_functions>=1.0
 scipy>=1.14
 setuptools<81
+pygad>=3.3,<4.0
+matplotlib>=3.8,<4.0
